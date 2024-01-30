@@ -32,7 +32,7 @@ def scrape():
                 try:
                     # Try to find the product name
                     productName = div.find("span", class_="a-size-base-plus a-color-base a-text-normal").text.strip()
-                        print(f"Product Name: {productName}")
+                    print(f"Product Name: {productName}")
                 except AttributeError:
                     productName = "Name Unavailable"
 
