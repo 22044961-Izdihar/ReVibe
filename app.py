@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 @app.route('/scrape', methods=['GET'])
 def scrape():
+    try:
     # Prompt the user for the items they want to search for
     searchItems = request.args.get('searchItems')
 
@@ -57,6 +58,10 @@ def scrape():
 
     # Return the results in JSON format
     return jsonify(results)
+    except Exception as e:
+        print(f"An exception occurred: {str(e)}")
+        return jsonify({"error": str(e)}), 500  # Return a 500 Internal Server Error status code
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
