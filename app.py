@@ -29,39 +29,39 @@ def scrape():
     # Create a list to store the results
     results = []
 
-    # Loop through the divs and extract the product information for the first 4 products
-    for index, div in enumerate(divs):
-        if index < 4:
-            try:
-                # Try to find the product name
-                productName = div.find("span", class_="a-size-base-plus a-color-base a-text-normal").text.strip()
-                print(f"Product Name: {productName}")
-            except AttributeError:
-                productName = "Name Unavailable"
+    # Loop through the divs and extract the product information
+    for div in divs:
+        try:
+            # Try to find the product name
+            productName = div.find("span", class_="a-size-base-plus a-color-base a-text-normal").text.strip()
+            print(f"Product Name: {productName}")
+        except AttributeError:
+            productName = "Name Unavailable"
 
-            try:
-                # Try to find the product price
-                productPrice = div.find("span", class_="a-offscreen").text.strip()
-                print(f"Product Price: {productPrice}")
-            except AttributeError:
-                productPrice = "Price Unavailable"
+        try:
+            # Try to find the product price
+            productPrice = div.find("span", class_="a-offscreen").text.strip()
+            print(f"Product Price: {productPrice}")
+        except AttributeError:
+            productPrice = "Price Unavailable"
 
-            try:
-                # Try to find the product link
-                productLink = div.find("a", class_="a-link-normal")["href"]
-                print(f"Product Link: {productLink}")
-            except AttributeError:
-                productLink = "Link Unavailable"
+        try:
+            # Try to find the product link
+            productLink = div.find("a", class_="a-link-normal")["href"]
+            print(f"Product Link: {productLink}")
+        except AttributeError:
+            productLink = "Link Unavailable"
 
-            # Add 'www.Amazon.sg' in front of each link
-            productLink = f"www.Amazon.sg{productLink}"
+        # Add 'www.Amazon.sg' in front of each link
+        productLink = f"www.Amazon.sg{productLink}"
 
-            # Append the product information to the results list
-            results.append({"productName": productName, "productPrice": productPrice, "productLink": productLink})
+        # Append the product information to the results list
+        results.append({"productName": productName, "productPrice": productPrice, "productLink": productLink})
 
     # Return the results in JSON format
     return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
