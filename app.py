@@ -6,63 +6,62 @@ app = Flask(__name__)
 
 @app.route('/scrape', methods=['GET'])
 def scrape():
-    try:
-        # Prompt the user for the items they want to search for
-        searchItems = request.args.get('searchItems')
+    # Prompt the user for the items they want to search for
+    searchItems = request.args.get('searchItems')
 
-        # Replace this URL with the Amazon sg webpage you want to scrape
-        url = f"https://www.amazon.sg/s?k={searchItems.replace(' ', '+')}"
+    # Check if searchItems is None
+    if searchItems is None:
+        return jsonify({"error": "Missing 'searchItems' parameter"}), 400  # Return a 400 Bad Request status code
 
-        # Send an HTTP request to the webpage and get the HTML content
-        response = requests.get(url)
-        html_content = response.text
+    # Replace this URL with the Amazon sg webpage you want to scrape
+    url = f"https://www.amazon.sg/s?k={searchItems.replace(' ', '+')}"
 
-        # Parse the HTML content using BeautifulSoup
-        soup = BeautifulSoup(html_content, "html.parser")
+    # Send an HTTP request to the webpage and get the HTML content
+    response = requests.get(url)
+    html_content = response.text
 
-        # Find all the divs with the specified class name
-        divs = soup.find_all("div", class_="puis-card-container s-card-container s-overflow-hidden aok-relative puis-expand-height puis-include-content-margin puis puis-vmsrh7ksw1p6r26mpgmpvetbls s-latency-cf-section puis-card-border")
+    # Parse the HTML content using BeautifulSoup
+    soup = BeautifulSoup(html_content, "html.parser")
 
-        # Create a list to store the results
-        results = []
+    # Find all the divs with the specified class name
+    divs = soup.find_all("div", class_="puis-card-container s-card-container s-overflow-hidden aok-relative puis-expand-height puis-include-content-margin puis puis-vmsrh7ksw1p6r26mpgmpvetbls s-latency-cf-section puis-card-border")
 
-        # Loop through the divs and extract the product information for the first 4 products
-        for index, div in enumerate(divs):
-            if index < 4:
-                try:
-                    # Try to find the product name
-                    productName = div.find("span", class_="a-size-base-plus a-color-base a-text-normal").text.strip()
-                    print(f"Product Name: {productName}")
-                except AttributeError:
-                    productName = "Name Unavailable"
+    # Create a list to store the results
+    results = []
 
-                try:
-                    # Try to find the product price
-                    productPrice = div.find("span", class_="a-offscreen").text.strip()
-                    print(f"Product Price: {productPrice}")
-                except AttributeError:
-                    productPrice = "Price Unavailable"
+    # Loop through the divs and extract the product information for the first 4 products
+    for index, div in enumerate(divs):
+        if index < 4:
+            try:
+                # Try to find the product name
+                productName = div.find("span", class_="a-size-base-plus a-color-base a-text-normal").text.strip()
+                print(f"Product Name: {productName}")
+            except AttributeError:
+                productName = "Name Unavailable"
 
-                try:
-                    # Try to find the product link
-                    productLink = div.find("a", class_="a-link-normal")["href"]
-                    print(f"Product Link: {productLink}")
-                except AttributeError:
-                    productLink = "Link Unavailable"
+            try:
+                # Try to find the product price
+                productPrice = div.find("span", class_="a-offscreen").text.strip()
+                print(f"Product Price: {productPrice}")
+            except AttributeError:
+                productPrice = "Price Unavailable"
 
-                # Add 'www.Amazon.sg' in front of each link
-                productLink = f"www.Amazon.sg{productLink}"
+            try:
+                # Try to find the product link
+                productLink = div.find("a", class_="a-link-normal")["href"]
+                print(f"Product Link: {productLink}")
+            except AttributeError:
+                productLink = "Link Unavailable"
 
-                # Append the product information to the results list
-                results.append({"productName": productName, "productPrice": productPrice, "productLink": productLink})
+            # Add 'www.Amazon.sg' in front of each link
+            productLink = f"www.Amazon.sg{productLink}"
 
-        # Return the results in JSON format
-        return jsonify(results)
+            # Append the product information to the results list
+            results.append({"productName": productName, "productPrice": productPrice, "productLink": productLink})
 
-    except Exception as e:
-        print(f"An exception occurred: {str(e)}")
-        return jsonify({"error": str(e)}), 500  # Return a 500 Internal Server Error status code
-    
+    # Return the results in JSON format
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
