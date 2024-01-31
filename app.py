@@ -58,8 +58,8 @@ def scrape():
         # Append the product information to the results list
         results.append({"productName": productName, "productPrice": productPrice, "productLink": productLink})
 
-    # Return the results in JSON format
-    return jsonify(results)
+    # Return the results in JSON format without square brackets
+    return jsonify({"results": results})
 
 if __name__ == '__main__':
     app.run(debug=True)
