@@ -55,13 +55,23 @@ def scrape():
         # Add 'www.Amazon.sg' in front of each link
         productLink = f"www.Amazon.sg{productLink}"
 
+        try:
+            # Try to find the product image
+            productImage = div.find("img", class_="s-image")["src"]
+            print(f"Product Image: {productImage}")
+        except AttributeError:
+            productImage = "Image Unavailable"
+
         # Append the product information to the results list
-        results.append({"productName": productName, "productPrice": productPrice, "productLink": productLink})
+        results.append({
+            "productName": productName,
+            "productPrice": productPrice,
+            "productLink": productLink,
+            "productImage": productImage
+        })
 
     # Return the results in JSON format without square brackets
     return jsonify({"results": results})
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
