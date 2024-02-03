@@ -24,7 +24,7 @@ def scrape():
     soup = BeautifulSoup(html_content, "html.parser")
 
     # Find all the divs with the specified class name
-    divs = soup.find_all("div", class_="puis-card-container s-card-container s-overflow-hidden aok-relative puis-expand-height puis-include-content-margin puis puis-vyc7pf4uzjrji2g91gh4jfk5m7 s-latency-cf-section puis-card-border")
+    divs = soup.select('div[class*="puis-card-container"][class*="s-card-container"][class*="puis-expand-height"][class*="puis-include-content-margin"][class*="puis"][class*="s-latency-cf-section"][class*="puis-card-border"]')
 
     # Create a list to store the results
     results = []
