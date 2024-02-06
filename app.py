@@ -52,8 +52,8 @@ def scrape():
         except AttributeError:
             productLink = "Link Unavailable"
 
-        # Add 'www.Amazon.sg' in front of each link
-        productLink = f"www.Amazon.sg{productLink}"
+        # Add 'https://www.Amazon.sg' in front of each link
+        productLink = f"https://www.Amazon.sg{productLink}"
 
         try:
             # Try to find the product image
